@@ -1,0 +1,35 @@
+const AppContext = React.createContext()
+
+const Lowest = () => (
+  <div>
+     <AppContext.Consumer>
+        {(context) => context.name}
+      </AppContext.Consumer>
+  </div>
+)
+
+const Middle = () => (
+  <div>
+    <p>I’m the middle  component</p>
+    <Lowest />
+  </div>
+)
+
+class Highest extends React.Component {
+    state = {
+        name : 'React Context API',
+    }
+    render() {
+        return ( 
+        <AppContext.Provider value={this.state}>
+          <Middle/>
+        </AppContext.Provider>
+        )
+    }
+}
+
+ReactDOM.render(
+  <Highest/>,
+  document.getElementById("root")
+)
+
