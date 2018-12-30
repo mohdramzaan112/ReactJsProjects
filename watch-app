@@ -1,0 +1,9 @@
+function CurrentTime(){
+    var current_date = new Date()
+    time = current_date.getHours() + ':' + (current_date.getMinutes() + 1) + ':' + current_date.getSeconds();
+    ReactDOM.render(
+      <div>{time}</div>,
+      document.getElementById("root")
+    )
+}
+setInterval(CurrentTime,1000)
