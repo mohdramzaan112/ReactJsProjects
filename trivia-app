@@ -1,0 +1,115 @@
+class IncorrectAnswer extends React.Component {
+  render() {
+    return (
+        <h4 className="text-danger">Incorrect Answer = {this.props.incorrect}</h4>
+    )
+  }
+} 
+
+class CorrectAnswer extends React.Component {
+  render() {  
+    return (
+      <div className="col-lg-6" style={{padding:"40px 0px 0px 50px"}}>
+        <h4 className="text-success">Correct Answer = {this.props.correct}</h4>
+        <IncorrectAnswer incorrect = {this.props.incorrect}/>
+      </div>
+    )
+  }
+}
+
+class AnswerChoices extends React.Component {
+  render() {
+    return (
+        <button className="btn btn-default btn-outline-secondary" onClick={() => {this.props.clickHandler(this.props.correct_answer)}}>{this.props.option}</button>
+    )
+  }
+}
+
+class QuestionSection extends React.Component {
+  render() {
+    return (
+      <div className="col-lg-12">
+        <h3 className="text-primary">{this.props.title}</h3>
+      </div>
+    )
+  }
+}
+
+class Trivia extends React.Component {
+  constructor(props) {
+    super(props)
+    
+    this.state = {
+      correct: 0,
+      incorrect:0,
+      count:0
+    }
+    
+    this.clickHandler = this.clickHandler.bind(this)
+  }
+  
+  clickHandler(correct_answer){
+    if(this.state.count == 10)
+       return
+    
+    if(correct_answer == null) {
+      this.setState({incorrect:this.state.incorrect+1})
+    } else {
+      this.setState({correct:this.state.correct+1})
+    }
+    if(this.state.count == 10) {
+      this.setState({count:0,incorrect:0,correct:0})
+    } else {
+      this.setState({count:this.state.count+1})
+    }
+    
+  }
+  
+  restart() {
+    this.setState({correct:0,incorrect:0,count:0})
+  }
+  render() {
+    var questions_array = [
+      {id:1, title:"What is 2 x 3", answer:"6"},
+      {id:2, title:"Total Modules in this course", answer:"5"},
+      {id:3, title:"Multiply 3 x 3", answer:"9"},
+      {id:4, title:"What 3 x 8", answer:"24"},
+      {id:5, title:"1024 GB = ____ TB", answer:"1"},
+      {id:6, title:"Einstein had ____ legs.", answer:"2"},
+      {id:7, title:"Number of vowels ?", answer:"5"},
+      {id:8, title:"Week has ____ days.", answer:"7"},
+      {id:9, title:"Hours in a day !", answer:"24"},
+      {id:10, title:"Human has eyes ?", answer:"2"},
+      {id:11, title:""}
+    ] 
+    
+    /*create array storing values for options and will replace one index value with original answer randomly*/
+    var option_values = Array(16,4,19,7)
+    var random_index = Math.floor(Math.random()*option_values.length)
+    
+    var correct_answer = questions_array[this.state.count].answer
+    option_values[random_index] = correct_answer
+    var question = option_values.map((option) =>{
+        return (
+          <AnswerChoices option={option} correct_answer={(option == correct_answer) ? correct_answer:null} clickHandler = {this.clickHandler}/>
+        )
+    })
+    return(
+      <div className="container">
+        <div className="row">
+          <QuestionSection title = {questions_array[this.state.count].title}/>
+          <div className="col-sm-4 btn-group-vertical btn-block">
+          {this.state.count == 10 ? <h3>Game Over !</h3> : question}
+          </div>
+          <CorrectAnswer correct = {this.state.correct} incorrect = {this.state.incorrect}/>
+        </div><br/>
+        <button className="btn btn-dark" type="reset" onClick={() => this.restart()}>Restart</button>
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(
+  <Trivia/>,
+  document.getElementById("root")
+)
