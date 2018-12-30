@@ -1,0 +1,26 @@
+//install mitt library
+//$ npm install --save mitt
+
+import React, { Component } from 'react'
+import mitt from 'mitt'
+
+const emitter = mitt()
+
+const fun_call = (e) => {
+    console.log('yes function called.',e)    //see in console
+};
+emitter.on('foo',
+    e => fun_call(e)
+)
+emitter.emit('foo', 1)      //listen
+
+class MittComponent extends Component {
+    
+    render() {
+        return (
+            <h1>Event fired, output is in console.</h1>
+        )
+    }
+}
+
+export default MittComponent
